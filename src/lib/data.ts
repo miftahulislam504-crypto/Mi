@@ -211,6 +211,74 @@ export const ecosystemHighlights = [
   'Single authentication layer across all apps',
 ]
 
+/**
+ * "Universes" group projects by category for the 3D Galaxy navigation
+ * (Galaxy -> Universe -> Planet). Each universe is a glowing cluster
+ * positioned around the galactic core (the Hero black hole); once a
+ * visitor enters a universe, its projects render as orbiting planets
+ * using the same logic as the current Universe scene, just filtered.
+ *
+ * `position` is the cluster's place in galaxy-space ([x, y, z], ready
+ * to spread straight into an R3F <group position={...}>). These are
+ * starting values — tune them once the Galaxy scene's camera framing
+ * is dialled in during Phase 2.
+ */
+export interface Universe {
+  id: string
+  category: Project['category']
+  label: string
+  tagline: string
+  color: string
+  icon: LucideIcon
+  position: [number, number, number]
+}
+
+export const universes: Universe[] = [
+  {
+    id: 'civilos-core',
+    category: 'CivilOS Core',
+    label: 'CivilOS Core',
+    tagline: 'Seven apps. One Firestore core. The heart of the ecosystem.',
+    color: '#8B5CF6',
+    icon: Network,
+    position: [13, 2.5, 5],
+  },
+  {
+    id: 'community',
+    category: 'Community',
+    label: 'Community',
+    tagline: 'Interest-free finance and networking for the Ummah.',
+    color: '#10B981',
+    icon: HeartHandshake,
+    position: [-11, -3, 9],
+  },
+  {
+    id: 'commerce',
+    category: 'Commerce',
+    label: 'Commerce',
+    tagline: 'Construction materials, a tap away.',
+    color: '#F59E0B',
+    icon: ShoppingCart,
+    position: [-6, 4, -13],
+  },
+  {
+    id: 'business',
+    category: 'Business',
+    label: 'Business',
+    tagline: 'Streamlined tools for everyday operations.',
+    color: '#818CF8',
+    icon: Briefcase,
+    position: [12, -4, -10],
+  },
+]
+
+/** All projects belonging to a given universe, by its `id`. */
+export function getUniverseProjects(universeId: string): Project[] {
+  const universe = universes.find((u) => u.id === universeId)
+  if (!universe) return []
+  return projects.filter((p) => p.category === universe.category)
+}
+
 export const skills = {
   frontend: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Vite', 'Fabric.js'],
   backend: ['Firebase', 'Firestore', 'Cloud Functions', 'Firebase Auth', 'Firebase Hosting', 'Vercel'],
