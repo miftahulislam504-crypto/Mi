@@ -10,15 +10,17 @@ import { useVisitorPulse } from '@/hooks/useVisitorPulse'
 import { profile } from '@/lib/data'
 import { formatNumber } from '@/lib/utils'
 
-const HeroScene = dynamic(() => import('@/components/three/HeroScene'), {
-  ssr: false,
-  loading: () => null,
-})
-
 /**
- * Static gradient shown instead of the 3D scene when the visitor prefers
- * reduced motion, and as the dynamic-import loading placeholder.
+ * Hero section.
+ *
+ * Phase 2: The separate HeroScene canvas is GONE. GalaxyExperience is now
+ * the single persistent canvas — it lives in the Universe section directly
+ * below and is tall enough to span the viewport fold. Hero keeps its own
+ * background gradient as a soft backdrop, plus the HUD overlays, copy, and
+ * CTA buttons. When the user scrolls down they pass directly into the live
+ * 3D galaxy without any canvas swap.
  */
+
 function HeroBackdropFallback() {
   return (
     <div className="absolute inset-0">
@@ -30,13 +32,16 @@ function HeroBackdropFallback() {
 }
 
 export function Hero() {
-  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
   const visitors = useVisitorPulse()
 
   return (
-    <section id="home" className="relative flex h-[100svh] w-full flex-col items-center justify-center overflow-hidden">
+    <section
+      id="home"
+      className="relative flex h-[100svh] w-full flex-col items-center justify-center overflow-hidden"
+    >
+      {/* Background — static gradient, GalaxyExperience canvas is in #universe below */}
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[#0c0f1f] via-[#04050D] to-[#04050D]">
-        {prefersReducedMotion ? <HeroBackdropFallback /> : <HeroScene />}
+        <HeroBackdropFallback />
       </div>
       <div className="absolute inset-0 -z-[5] bg-noise" />
 
@@ -108,7 +113,9 @@ export function Hero() {
               <span className="font-display text-xl font-bold text-ink sm:text-2xl">
                 {stat.isYear ? stat.value : `${stat.value}${stat.suffix}`}
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-dim">{stat.label}</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-dim">
+                {stat.label}
+              </span>
             </div>
           ))}
         </motion.div>
