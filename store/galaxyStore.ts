@@ -6,45 +6,57 @@ export type GalaxyPhase =
   | "galaxy"
   | "universe"
   | "orbit"
-  | "landing";
+  | "landing"
+  | "constellation"
+  | "timeline";
 
 interface GalaxyStore {
-  // Phase control
   phase: GalaxyPhase;
   setPhase: (phase: GalaxyPhase) => void;
 
-  // Universe & Planet selection
   activeUniverseId: string | null;
   activePlanetId: string | null;
   setActiveUniverse: (id: string | null) => void;
   setActivePlanet: (id: string | null) => void;
 
-  // Audio
   audioEnabled: boolean;
   toggleAudio: () => void;
 
-  // Genesis sequence progress (0-1)
   genesisProgress: number;
   setGenesisProgress: (progress: number) => void;
 
-  // Camera target (for smooth transitions)
   cameraTarget: [number, number, number];
   setCameraTarget: (target: [number, number, number]) => void;
 
-  // Panel open state
   isPanelOpen: boolean;
   setPanelOpen: (open: boolean) => void;
 
-  // Astronaut message
+  // Astronaut
   astronautMessage: string;
+  astronautVisible: boolean;
   setAstronautMessage: (msg: string) => void;
+  setAstronautVisible: (v: boolean) => void;
+
+  // Constellation
+  hoveredConstellationId: string | null;
+  setHoveredConstellation: (id: string | null) => void;
+  unlockedConstellations: string[];
+  unlockConstellation: (id: string) => void;
+
+  // Timeline
+  activeTimelineYear: number | null;
+  setActiveTimelineYear: (year: number | null) => void;
 
   // Easter eggs
   warpMode: boolean;
   setWarpMode: (active: boolean) => void;
-  konami: number; // index in konami sequence
+  konami: number;
   incrementKonami: () => void;
   resetKonami: () => void;
+  hiddenPlanetsFound: string[];
+  findHiddenPlanet: (id: string) => void;
+  secretConstellationUnlocked: boolean;
+  setSecretConstellation: (v: boolean) => void;
 }
 
 export const useGalaxyStore = create<GalaxyStore>((set) => ({
@@ -53,8 +65,7 @@ export const useGalaxyStore = create<GalaxyStore>((set) => ({
 
   activeUniverseId: null,
   activePlanetId: null,
-  setActiveUniverse: (id) =>
-    set({ activeUniverseId: id, activePlanetId: null }),
+  setActiveUniverse: (id) => set({ activeUniverseId: id, activePlanetId: null }),
   setActivePlanet: (id) => set({ activePlanetId: id }),
 
   audioEnabled: true,
@@ -70,11 +81,35 @@ export const useGalaxyStore = create<GalaxyStore>((set) => ({
   setPanelOpen: (open) => set({ isPanelOpen: open }),
 
   astronautMessage: "Welcome Explorer. The universe awaits.",
+  astronautVisible: false,
   setAstronautMessage: (msg) => set({ astronautMessage: msg }),
+  setAstronautVisible: (v) => set({ astronautVisible: v }),
+
+  hoveredConstellationId: null,
+  setHoveredConstellation: (id) => set({ hoveredConstellationId: id }),
+  unlockedConstellations: [],
+  unlockConstellation: (id) =>
+    set((s) => ({
+      unlockedConstellations: s.unlockedConstellations.includes(id)
+        ? s.unlockedConstellations
+        : [...s.unlockedConstellations, id],
+    })),
+
+  activeTimelineYear: null,
+  setActiveTimelineYear: (year) => set({ activeTimelineYear: year }),
 
   warpMode: false,
   setWarpMode: (active) => set({ warpMode: active }),
   konami: 0,
   incrementKonami: () => set((s) => ({ konami: s.konami + 1 })),
   resetKonami: () => set({ konami: 0 }),
+  hiddenPlanetsFound: [],
+  findHiddenPlanet: (id) =>
+    set((s) => ({
+      hiddenPlanetsFound: s.hiddenPlanetsFound.includes(id)
+        ? s.hiddenPlanetsFound
+        : [...s.hiddenPlanetsFound, id],
+    })),
+  secretConstellationUnlocked: false,
+  setSecretConstellation: (v) => set({ secretConstellationUnlocked: v }),
 }));

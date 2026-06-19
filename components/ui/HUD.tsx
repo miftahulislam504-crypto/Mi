@@ -218,3 +218,54 @@ export function UniverseLabel() {
     </motion.div>
   );
 }
+
+// Easter egg discovery counter
+export function DiscoveryCounter() {
+  const { hiddenPlanetsFound, unlockedConstellations, secretConstellationUnlocked, warpMode } =
+    useGalaxyStore();
+
+  const total =
+    hiddenPlanetsFound.length +
+    unlockedConstellations.filter((id) => id !== "secret").length +
+    (secretConstellationUnlocked ? 1 : 0);
+
+  if (total === 0 && !warpMode) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="fixed bottom-6 left-6 z-50 font-mono text-xs tracking-widest"
+      style={{ color: "rgba(232,240,255,0.35)" }}
+    >
+      {warpMode && (
+        <div style={{ color: "#aaccff", marginBottom: "4px", letterSpacing: "0.3em" }}>
+          ⚡ WARP MODE
+        </div>
+      )}
+      {total > 0 && (
+        <div>
+          ✦ {total} discovered
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
+// Warp mode full-screen flash
+export function WarpOverlay() {
+  const { warpMode } = useGalaxyStore();
+  return (
+    <AnimatePresence>
+      {warpMode && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 0.15, 0] }}
+          transition={{ duration: 0.5 }}
+          className="fixed inset-0 z-30 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse at center, #4488ff22 0%, transparent 70%)" }}
+        />
+      )}
+    </AnimatePresence>
+  );
+}

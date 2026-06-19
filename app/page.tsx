@@ -3,9 +3,10 @@
 import { useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useGalaxyStore } from "@/store/galaxyStore";
-import { MuteButton, ScrollHint, PhaseIndicator, LoadingOverlay, BackButton, UniverseLabel } from "@/components/ui/HUD";
+import { MuteButton, ScrollHint, PhaseIndicator, LoadingOverlay, BackButton, UniverseLabel, DiscoveryCounter, WarpOverlay } from "@/components/ui/HUD";
 import AudioSystem from "@/components/experience/AudioSystem";
 import { useGalaxyScroll, useKonami } from "@/hooks/useGalaxyScroll";
+import ProjectPanel from "@/components/panels/ProjectPanel";
 
 const GalaxyScene = dynamic(
   () => import("@/components/experience/GalaxyScene"),
@@ -38,6 +39,9 @@ export default function Home() {
       <BackButton />
       <MuteButton />
       <ScrollHint />
+      <ProjectPanel />
+      <DiscoveryCounter />
+      <WarpOverlay />
     </main>
   );
 }

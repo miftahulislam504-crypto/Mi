@@ -343,63 +343,156 @@ export const UNIVERSES: UniverseData[] = [
   },
 ];
 
-export const CONSTELLATION_SKILLS = [
+export interface ConstellationSkill {
+  id: string;
+  name: string;
+  color: string;
+  description: string;
+  yearsExp: number;
+  stars: [number, number, number][];
+  // line pairs: indices into stars array
+  lines: [number, number][];
+  secret?: boolean;
+}
+
+export const CONSTELLATION_SKILLS: ConstellationSkill[] = [
   {
     id: "react",
     name: "React",
     color: "#61dafb",
+    description: "UI library for building component-based interfaces",
+    yearsExp: 4,
     stars: [
       [0, 2, -50],
-      [1.5, 3, -50],
+      [1.5, 3.2, -50],
       [3, 2, -50],
       [1.5, 0.5, -50],
-    ] as [number, number, number][],
+      [1.5, 2, -50],
+    ],
+    lines: [[0,4],[1,4],[2,4],[3,4]],
   },
   {
     id: "nextjs",
     name: "Next.js",
-    color: "#ffffff",
+    color: "#e8f0ff",
+    description: "React framework with SSR, routing, and edge capabilities",
+    yearsExp: 3,
     stars: [
       [-5, 1, -48],
       [-3.5, 3, -48],
       [-2, 1, -48],
       [-3.5, -0.5, -48],
-    ] as [number, number, number][],
+      [-4.5, 2, -48],
+    ],
+    lines: [[0,4],[1,4],[2,3],[3,0]],
   },
   {
     id: "typescript",
     name: "TypeScript",
     color: "#3178c6",
+    description: "Typed superset of JavaScript for safer, scalable code",
+    yearsExp: 3,
     stars: [
       [5, 3, -52],
       [7, 3, -52],
       [6, 1.5, -52],
       [5, 0, -52],
       [7, 0, -52],
-    ] as [number, number, number][],
+      [6, 3, -52],
+    ],
+    lines: [[0,5],[1,5],[2,3],[2,4],[3,4]],
   },
   {
     id: "firebase",
     name: "Firebase",
     color: "#ffca28",
+    description: "Google's app platform — Auth, Firestore, Hosting",
+    yearsExp: 4,
     stars: [
       [-8, -1, -49],
-      [-7, 1, -49],
+      [-7, 1.5, -49],
       [-6, -1, -49],
       [-7, -2.5, -49],
-    ] as [number, number, number][],
+      [-7, 0, -49],
+    ],
+    lines: [[1,4],[4,0],[4,2],[0,3],[2,3]],
   },
   {
     id: "threejs",
     name: "Three.js",
-    color: "#ffffff",
+    color: "#e8f0ff",
+    description: "3D graphics library for WebGL-powered experiences",
+    yearsExp: 2,
     stars: [
       [10, 0, -51],
-      [11.5, 2, -51],
+      [11.5, 2.5, -51],
       [13, 0, -51],
       [11.5, -2, -51],
-      [11.5, 0, -51],
-    ] as [number, number, number][],
+      [11.5, 0.5, -51],
+    ],
+    lines: [[0,4],[1,4],[2,4],[3,4],[0,3]],
+  },
+  {
+    id: "bnbc",
+    name: "BNBC 2020",
+    color: "#ff9500",
+    description: "Bangladesh National Building Code — structural compliance",
+    yearsExp: 5,
+    stars: [
+      [-12, 2, -53],
+      [-11, 3.5, -53],
+      [-10, 2, -53],
+      [-11, 0.5, -53],
+      [-13, 0, -53],
+      [-11, 2, -53],
+    ],
+    lines: [[0,5],[1,5],[2,5],[3,5],[4,0]],
+  },
+  {
+    id: "tailwind",
+    name: "Tailwind CSS",
+    color: "#38bdf8",
+    description: "Utility-first CSS framework for rapid UI development",
+    yearsExp: 3,
+    stars: [
+      [15, 2, -50],
+      [16.5, 3.5, -50],
+      [18, 2, -50],
+      [16.5, 0.5, -50],
+    ],
+    lines: [[0,1],[1,2],[2,3],[3,0]],
+  },
+  {
+    id: "gsap",
+    name: "GSAP",
+    color: "#88ce02",
+    description: "Professional animation library for the web",
+    yearsExp: 2,
+    stars: [
+      [-15, -1, -48],
+      [-14, 1, -48],
+      [-13, -1, -48],
+      [-14, -2.5, -48],
+    ],
+    lines: [[0,1],[1,2],[2,3],[3,0]],
+  },
+  // ── Secret constellation — hidden, no label until found ──
+  {
+    id: "secret",
+    name: "??????????",
+    color: "#ff00ff",
+    description: "You found the secret constellation! 🎉",
+    yearsExp: 0,
+    secret: true,
+    stars: [
+      [20, 5, -55],
+      [21, 7, -55],
+      [22, 5, -55],
+      [21, 3, -55],
+      [23, 7, -55],
+      [19, 7, -55],
+    ],
+    lines: [[0,1],[1,2],[2,3],[3,0],[1,4],[1,5]],
   },
 ];
 
