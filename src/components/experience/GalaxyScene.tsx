@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { Suspense } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import GenesisScene        from "./GenesisScene";
 import GalaxyView          from "./GalaxyView";
@@ -56,29 +56,47 @@ function SceneContent() {
 }
 
 export default function GalaxyScene() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Forward touch events to pointer events so Three.js raycasting works on mobile
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const fwd = (type: string) => (e: TouchEvent) => {
+      e.preventDefault();
+      const t = e.changedTouches[0];
+      canvas.dispatchEvent(new PointerEvent(type, {
+        pointerId: t.identifier,
+        clientX: t.clientX,
+        clientY: t.clientY,
+        bubbles: true,
+        cancelable: true,
+        isPrimary: true,
+      }));
+    };
+
+    const onDown  = fwd("pointerdown");
+    const onMove  = fwd("pointermove");
+    const onUp    = fwd("pointerup");
+
+    canvas.addEventListener("touchstart",  onDown, { passive: false });
+    canvas.addEventListener("touchmove",   onMove, { passive: false });
+    canvas.addEventListener("touchend",    onUp,   { passive: false });
+
+    return () => {
+      canvas.removeEventListener("touchstart",  onDown);
+      canvas.removeEventListener("touchmove",   onMove);
+      canvas.removeEventListener("touchend",    onUp);
+    };
+  }, []);
+
   return (
     <Canvas
+      ref={canvasRef}
       camera={{ position: [0, 0, 12], fov: 60, near: 0.1, far: 1000 }}
       gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
       dpr={[1, 1.5]}
-      // Fix mobile touch events in fiber v9
-      events={(store) => ({
-        ...store.events,
-        connect: (target: HTMLElement) => {
-          const { set, events } = store;
-          target.addEventListener("touchstart",  events.handlers!.onPointerDown as EventListener, { passive: false });
-          target.addEventListener("touchmove",   events.handlers!.onPointerMove as EventListener, { passive: false });
-          target.addEventListener("touchend",    events.handlers!.onPointerUp   as EventListener, { passive: false });
-          set({ events: { ...events, connected: target } });
-        },
-        disconnect: (target: HTMLElement) => {
-          const { set, events } = store;
-          target.removeEventListener("touchstart",  events.handlers!.onPointerDown as EventListener);
-          target.removeEventListener("touchmove",   events.handlers!.onPointerMove as EventListener);
-          target.removeEventListener("touchend",    events.handlers!.onPointerUp   as EventListener);
-          set({ events: { ...events, connected: undefined } });
-        },
-      })}
       style={{
         position: "fixed",
         top: 0, left: 0,
