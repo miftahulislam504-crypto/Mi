@@ -3,39 +3,39 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
-import GenesisScene       from "./GenesisScene";
-import GalaxyView         from "./GalaxyView";
-import UniverseScene      from "./UniverseScene";
-import CameraRig          from "./CameraRig";
-import WarpEffect         from "./WarpEffect";
-import WeatherEffects     from "./WeatherEffects";
+import GenesisScene        from "./GenesisScene";
+import GalaxyView          from "./GalaxyView";
+import UniverseScene       from "./UniverseScene";
+import CameraRig           from "./CameraRig";
+import WarpEffect          from "./WarpEffect";
+import WeatherEffects      from "./WeatherEffects";
 import ConstellationSkills from "./ConstellationSkills";
-import TimelineNebula     from "./TimelineNebula";
-import AIAstronaut        from "./AIAstronaut";
-import HiddenPlanets      from "./HiddenPlanets";
-import { useGalaxyStore } from "@/store/galaxyStore";
+import TimelineNebula      from "./TimelineNebula";
+import AIAstronaut         from "./AIAstronaut";
+import HiddenPlanets       from "./HiddenPlanets";
+import { useGalaxyStore }  from "@/store/galaxyStore";
 
 function SceneContent() {
   const { phase } = useGalaxyStore();
 
-  const showGenesis      = phase === "loading" || phase === "genesis";
-  const showGalaxy       = ["galaxy","universe","orbit","landing","constellation","timeline"].includes(phase);
-  const showUniverse     = ["universe","orbit","landing"].includes(phase);
-  const showConstellation= ["galaxy","constellation"].includes(phase);
-  const showTimeline     = ["galaxy","timeline"].includes(phase);
+  const showGenesis       = phase === "loading" || phase === "genesis";
+  const showGalaxy        = ["galaxy","universe","orbit","landing","constellation","timeline"].includes(phase);
+  const showUniverse      = ["universe","orbit","landing"].includes(phase);
+  const showConstellation = ["galaxy","constellation"].includes(phase);
+  const showTimeline      = ["galaxy","timeline"].includes(phase);
 
   return (
     <>
       <CameraRig />
       <ambientLight intensity={0.04} color="#1a1a3a" />
 
-      {showGenesis       && <GenesisScene />}
-      <GalaxyView         visible={showGalaxy} />
-      <UniverseScene      visible={showUniverse} />
+      {showGenesis        && <GenesisScene />}
+      <GalaxyView          visible={showGalaxy} />
+      <UniverseScene       visible={showUniverse} />
       <ConstellationSkills visible={showConstellation} />
-      <TimelineNebula     visible={showTimeline} />
-      <HiddenPlanets      visible={showGalaxy} />
-      <WeatherEffects     visible={showGalaxy} />
+      <TimelineNebula      visible={showTimeline} />
+      <HiddenPlanets       visible={showGalaxy} />
+      <WeatherEffects      visible={showGalaxy} />
       <WarpEffect />
       <AIAstronaut />
 
@@ -61,11 +61,30 @@ export default function GalaxyScene() {
       camera={{ position: [0, 0, 12], fov: 60, near: 0.1, far: 1000 }}
       gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
       dpr={[1, 1.5]}
+      // Fix mobile touch events in fiber v9
+      events={(store) => ({
+        ...store.events,
+        connect: (target: HTMLElement) => {
+          const { set, events } = store;
+          target.addEventListener("touchstart",  events.handlers!.onPointerDown as EventListener, { passive: false });
+          target.addEventListener("touchmove",   events.handlers!.onPointerMove as EventListener, { passive: false });
+          target.addEventListener("touchend",    events.handlers!.onPointerUp   as EventListener, { passive: false });
+          set({ events: { ...events, connected: target } });
+        },
+        disconnect: (target: HTMLElement) => {
+          const { set, events } = store;
+          target.removeEventListener("touchstart",  events.handlers!.onPointerDown as EventListener);
+          target.removeEventListener("touchmove",   events.handlers!.onPointerMove as EventListener);
+          target.removeEventListener("touchend",    events.handlers!.onPointerUp   as EventListener);
+          set({ events: { ...events, connected: undefined } });
+        },
+      })}
       style={{
         position: "fixed",
         top: 0, left: 0,
         width: "100vw", height: "100vh",
         background: "#00000f",
+        touchAction: "none",
       }}
     >
       <color attach="background" args={["#00000f"]} />
