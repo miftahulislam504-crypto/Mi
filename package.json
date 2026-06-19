@@ -19,7 +19,7 @@
     "gsap": "^3.12.5",
     "framer-motion": "^11.15.0",
     "zustand": "^5.0.2",
-    "@studio-freight/lenis": "^1.0.45",
+    "lenis": "^1.1.14",
     "howler": "^2.2.4",
     "leva": "^0.9.35"
   },
