@@ -28,6 +28,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="overflow-hidden">
       <body className={`${spaceMono.variable} font-space bg-[#00000f] text-white overflow-hidden`}>
+        <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `try { eruda.init(); } catch (e) {}`,}}/>
        {children}
       </body>
     </html>
