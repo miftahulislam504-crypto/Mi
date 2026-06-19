@@ -20,8 +20,7 @@
     "framer-motion": "^11.15.0",
     "zustand": "^5.0.2",
     "lenis": "^1.1.14",
-    "howler": "^2.2.4",
-    "leva": "^0.9.35"
+    "howler": "^2.2.4"
   },
   "devDependencies": {
     "typescript": "^5",
