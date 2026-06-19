@@ -44,7 +44,6 @@ function SceneContent() {
           intensity={phase === "landing" ? 2.5 : phase === "galaxy" ? 2.2 : 1.6}
           luminanceThreshold={0.15}
           luminanceSmoothing={0.9}
-          height={300}
         />
         <Vignette
           eskil={false}
